@@ -20,7 +20,7 @@
         app:layout_constraintVertical_bias="0.126" />
 
     <Button
-        android:id="@+id/pinBtn"
+        android:id="@+id/tagBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="104dp"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/maximizeBtn" />
 
     <Button
-        android:id="@+id/tagBtn"
+        android:id="@+id/pinBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="24dp"

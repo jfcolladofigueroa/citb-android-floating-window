@@ -15,8 +15,9 @@ export class FloatingWindowWeb
   }
 
   async sendMessage(): Promise<{ message: string }> {
-    return new Promise<{ message: string }>((resolve, reject)=>{
+    return new Promise<{ message: string }>((resolve)=>{
       resolve({message:"OK"});
     })
   }
+  
 }

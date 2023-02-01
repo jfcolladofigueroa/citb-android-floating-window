@@ -15,6 +15,9 @@ npx cap sync
 
 * [`echo(...)`](#echo)
 * [`minimize()`](#minimize)
+* [`sendMessage()`](#sendmessage)
+* [`addListener('floatingControlAction', ...)`](#addlistenerfloatingcontrolaction)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -43,5 +46,42 @@ minimize() => Promise<void>
 ```
 
 --------------------
+
+
+### sendMessage()
+
+```typescript
+sendMessage() => Promise<{ message: string; }>
+```
+
+**Returns:** <code>Promise&lt;{ message: string; }&gt;</code>
+
+--------------------
+
+
+### addListener('floatingControlAction', ...)
+
+```typescript
+addListener(eventName: 'floatingControlAction', listenerFunc: (data: { message: string; }) => {}) => Promise<PluginListenerHandle> & PluginListenerHandle
+```
+
+| Param              | Type                                               |
+| ------------------ | -------------------------------------------------- |
+| **`eventName`**    | <code>'floatingControlAction'</code>               |
+| **`listenerFunc`** | <code>(data: { message: string; }) =&gt; {}</code> |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt; & <a href="#pluginlistenerhandle">PluginListenerHandle</a></code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
 </docgen-api>
