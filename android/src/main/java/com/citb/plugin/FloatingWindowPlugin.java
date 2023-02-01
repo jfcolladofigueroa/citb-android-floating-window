@@ -7,11 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.view.View;
-
 import androidx.appcompat.app.AlertDialog;
-
-import com.getcapacitor.Bridge;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Logger;
 import com.getcapacitor.Plugin;
@@ -34,9 +30,10 @@ public class FloatingWindowPlugin extends Plugin {
     @PluginMethod
     public void minimize(PluginCall call) {
         if (checkOverlayDisplayPermission()) {
-            this.bridge.getContext().startService(new Intent(this.bridge.getContext(), FloatingWindowGFG.class));
-//            this.bridge.getActivity().finish();
-            this.bridge.getActivity().moveTaskToBack(true);
+            Intent serviceIntent = new Intent(this.bridge.getContext(), FloatingWindowGFG.class);
+            this.bridge.getContext().startService(serviceIntent);
+//            this.bridge.getActivity().finish(); //Cerrar
+            this.bridge.getActivity().moveTaskToBack(true); //Poner en background
         } else {
             requestOverlayDisplayPermission();
         }
@@ -46,31 +43,28 @@ public class FloatingWindowPlugin extends Plugin {
 
     @PluginMethod
     public void sendMessage(PluginCall call) {
-//        String message = "Hello from MyPlugin!";
-//        JSObject result = new JSObject();
-//        result.put("message", message);
-//        call.resolve(result);
         Context context = this.bridge.getContext();
         Intent intent = new Intent(context, this.bridge.getContext().getClass());
         context.startActivity(intent);
+        JSObject result = new JSObject();
+        result.put("message", "LISTO");
+        call.resolve(result);
     }
 
     public void startCommunication(String kind) {
+        Logger.error("startCommunication " + kind);
         JSObject data = new JSObject();
         data.put("message", kind);
-        notifyListeners("messageReceived", data);
+        notifyListeners("floatingControlAction", data);
     }
 
     public void prueba(){
-//        String packageName = this.bridge.getContext().getPackageName();
-//        Intent backToHome = this.bridge.getContext().getPackageManager().getLaunchIntentForPackage(packageName);
-//        String packageName = this.bridge.getActivity().getPackageName();
-//        Intent backToHome = this.bridge.getActivity().getPackageManager().getLaunchIntentForPackage(packageName);
         Intent backToHome = new Intent(this.bridge.getContext(), FloatingWindowPlugin.class);
-//        backToHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        backToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        backToHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //Abrir desde 0
+        backToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); //Traer al frebte
         this.bridge.getActivity().startActivity(backToHome);
     }
+
 
     private boolean checkOverlayDisplayPermission() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
