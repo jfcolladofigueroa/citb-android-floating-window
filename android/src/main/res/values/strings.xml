@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="maximize">MAXIMIZE</string>
+    <string name="local_service_label">880401323</string>
+    <string name="local_service_connected">FloatingWindowGFG_service</string>
+    <string name="local_service_disconnected">FloatingWindowGFG_disconected</string>
+</resources>

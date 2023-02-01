@@ -7,7 +7,16 @@ export class FloatingWindowWeb
   implements FloatingWindowPlugin
 {
   async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
     return options;
+  }
+
+  async minimize(): Promise<void> {
+    throw('Method not implemented');
+  }
+
+  async sendMessage(): Promise<{ message: string }> {
+    return new Promise<{ message: string }>((resolve, reject)=>{
+      resolve({message:"OK"});
+    })
   }
 }
