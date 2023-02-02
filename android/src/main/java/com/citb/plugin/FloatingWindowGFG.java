@@ -3,19 +3,24 @@ package com.citb.plugin;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FloatingWindowGFG extends Service {
 
@@ -25,9 +30,9 @@ public class FloatingWindowGFG extends Service {
     private WindowManager windowManager;
     private Button maximizeBtn;
     private  Button pinBtn;
-//    private  FloatingWindowPlugin pluginClass;
     private  Button tagBtn;
     private  Button moveBtn;
+    private boolean tagOpened = false;
 
     @Nullable
     @Override
@@ -39,7 +44,6 @@ public class FloatingWindowGFG extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-//        pluginClass = new FloatingWindowPlugin();
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
@@ -76,25 +80,20 @@ public class FloatingWindowGFG extends Service {
             public void onClick(View v) {
                 stopSelf();
                 windowManager.removeView(floatView);
-
                 //ABRIR DE NUEVO
 //                String packageName = getPackageName();
 //                Intent backToHome = getPackageManager().getLaunchIntentForPackage(packageName);
-////               backToHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//               backToHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                backToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//               startActivity(backToHome);
-
-                //LLAMAR A METODO DE LA CLASE, PERO PIERDE LA REFERENCIA A LOS LISTENERS,
-                //PORQUE SE CREA NUEVA CLASE Y PUES SE PIERDE LO DEMAS, OJO
-//                pluginClass.prueba();
-//                pluginClass.startCommunication("STOP");
+//                startActivity(backToHome);
+                sendMessageToPlugin("STOP");
             }
         });
 
         pinBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pluginClass.startCommunication("PIN");
+                sendMessageToPlugin("PIN");
             }
         });
 
@@ -102,11 +101,18 @@ public class FloatingWindowGFG extends Service {
             @Override
             public void onClick(View view) {
 //                pluginClass.startCommunication("TAG");
+//                Log.d("COLL","CLICK TAG");
+                tagOpened = !tagOpened;
+                if(tagOpened){
+                    tagBtn.setBackgroundResource(R.drawable.taggrey);
+                }else{
+                    tagBtn.setBackgroundResource(R.drawable.tag);
+                }
+                sendMessageToPlugin("TAG");
             }
         });
 
         moveBtn.setOnTouchListener(new View.OnTouchListener() {
-
             final WindowManager.LayoutParams floatWindowLayoutUpdateParam = floatWindowLayoutParam;
             double x;
             double y;
@@ -135,10 +141,19 @@ public class FloatingWindowGFG extends Service {
                         windowManager.updateViewLayout(floatView, floatWindowLayoutUpdateParam);
                         break;
                 }
-
                 return false;
             }
         });
+    }
+
+    // Send an Intent with an action named "custom-event-name". The Intent sent should
+    // be received by the ReceiverActivity.
+    private void sendMessageToPlugin(String event) {
+//        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent("custom-event-name");
+        // You can also include some extra data.
+        intent.putExtra("message", event);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     @Override
