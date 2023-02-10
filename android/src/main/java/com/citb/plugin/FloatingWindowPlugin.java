@@ -9,10 +9,8 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import androidx.appcompat.app.AlertDialog;
 import com.getcapacitor.JSObject;
-import com.getcapacitor.Logger;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -28,22 +26,17 @@ public class FloatingWindowPlugin extends Plugin {
     @Override
     public void load() {
         super.load();
-        // Register to receive messages.
-        // This is just like [[NSNotificationCenter defaultCenter] addObserver:...]
-        // We are registering an observer (mMessageReceiver) to receive Intents
-        // with actions named "custom-event-name".
         LocalBroadcastManager.getInstance(this.getContext()).registerReceiver(mMessageReceiver,
                 new IntentFilter("custom-event-name"));
     }
 
-    // Our handler for received Intents. This will be called whenever an Intent
-    // with an action named "custom-event-name" is broadcasted.
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
-//            Log.d("receiver", "Got message: " + message);
+            if(message == "STOP"){
+                stopService();
+            }
             notifyToApp(message);
         }
     };
@@ -53,10 +46,6 @@ public class FloatingWindowPlugin extends Plugin {
         if (checkOverlayDisplayPermission()) {
             Intent serviceIntent = new Intent(this.bridge.getContext(), FloatingWindowGFG.class);
             this.bridge.getContext().startService(serviceIntent);
-            //Cerrar
-//            this.bridge.getActivity().finish();
-            //Poner en background
-//            this.bridge.getActivity().moveTaskToBack(true);
         } else {
             requestOverlayDisplayPermission();
         }
@@ -64,7 +53,6 @@ public class FloatingWindowPlugin extends Plugin {
     }
 
     public void notifyToApp(String event) {
-        Logger.error("startCommunication " + event);
         JSObject data = new JSObject();
         data.put("message", event);
         notifyListeners("floatingControlAction", data);
@@ -100,6 +88,13 @@ public class FloatingWindowPlugin extends Plugin {
         });
         dialog = builder.create();
         dialog.show();
+    }
+
+    private void stopService(){
+        if(isMyServiceRunning()){
+            Intent serviceIntent = new Intent(this.bridge.getContext(), FloatingWindowGFG.class);
+            this.bridge.getContext().stopService(serviceIntent);
+        }
     }
 
     private boolean isMyServiceRunning() {

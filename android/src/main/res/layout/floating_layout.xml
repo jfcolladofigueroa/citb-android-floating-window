@@ -7,7 +7,7 @@
     android:background="@android:color/transparent">
 
     <Button
-        android:id="@+id/maximizeBtn"
+        android:id="@+id/stopBtn"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:background="@drawable/stop"
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maximizeBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/stopBtn" />
 
     <Button
         android:id="@+id/pinBtn"
@@ -41,7 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maximizeBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/stopBtn" />
 
     <Button
         android:id="@+id/moveBtn"
@@ -53,6 +53,6 @@
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/maximizeBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/stopBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,20 +3,16 @@ package com.citb.plugin;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -28,7 +24,7 @@ public class FloatingWindowGFG extends Service {
     private int LAYOUT_TYPE;
     private WindowManager.LayoutParams floatWindowLayoutParam;
     private WindowManager windowManager;
-    private Button maximizeBtn;
+    private Button stopBtn;
     private  Button pinBtn;
     private  Button tagBtn;
     private  Button moveBtn;
@@ -51,7 +47,7 @@ public class FloatingWindowGFG extends Service {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
         floatView = (ViewGroup) inflater.inflate(R.layout.floating_layout, null);
-        maximizeBtn = floatView.findViewById(R.id.maximizeBtn);
+        stopBtn = floatView.findViewById(R.id.stopBtn);
         pinBtn = floatView.findViewById(R.id.pinBtn);
         tagBtn = floatView.findViewById(R.id.tagBtn);
         moveBtn = floatView.findViewById(R.id.moveBtn);
@@ -74,19 +70,13 @@ public class FloatingWindowGFG extends Service {
         floatWindowLayoutParam.y = 0;
         windowManager.addView(floatView, floatWindowLayoutParam);
 
-        maximizeBtn.setOnClickListener(new View.OnClickListener() {
+        stopBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @Override
             public void onClick(View v) {
+                sendMessageToPlugin("STOP");
                 stopSelf();
                 windowManager.removeView(floatView);
-                //ABRIR DE NUEVO
-//                String packageName = getPackageName();
-//                Intent backToHome = getPackageManager().getLaunchIntentForPackage(packageName);
-//               backToHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                backToHome.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                startActivity(backToHome);
-                sendMessageToPlugin("STOP");
             }
         });
 
@@ -100,8 +90,6 @@ public class FloatingWindowGFG extends Service {
         tagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pluginClass.startCommunication("TAG");
-//                Log.d("COLL","CLICK TAG");
                 tagOpened = !tagOpened;
                 if(tagOpened){
                     tagBtn.setBackgroundResource(R.drawable.taggrey);
@@ -146,8 +134,6 @@ public class FloatingWindowGFG extends Service {
         });
     }
 
-    // Send an Intent with an action named "custom-event-name". The Intent sent should
-    // be received by the ReceiverActivity.
     private void sendMessageToPlugin(String event) {
 //        Log.d("sender", "Broadcasting message");
         Intent intent = new Intent("custom-event-name");
